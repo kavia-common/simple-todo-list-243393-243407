@@ -14,15 +14,16 @@ import TextInput from './ui/TextInput';
 function TodoForm(props) {
     const { onAddTodo } = props;
     const [title, setTitle] = useState('');
+    const trimmedTitle = title.trim();
+    const isValid = trimmedTitle.length > 0;
 
     /**
      * @param {React.FormEvent<HTMLFormElement>} e
      */
     function handleSubmit(e) {
         e.preventDefault();
-        const trimmed = title.trim();
-        if (!trimmed) return;
-        onAddTodo(trimmed);
+        if (!isValid) return;
+        onAddTodo(trimmedTitle);
         setTitle('');
     }
 
@@ -35,7 +36,7 @@ function TodoForm(props) {
                 ariaLabel="Todo title"
                 maxLength={120}
             />
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" disabled={!isValid} ariaLabel="Add todo">
                 Add
             </Button>
         </form>
