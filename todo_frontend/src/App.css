@@ -158,6 +158,17 @@
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
 
+.text-input--error {
+    border-color: rgba(239, 68, 68, 0.55);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+.form-error {
+    margin: 6px 2px 0;
+    font-size: 13px;
+    color: var(--danger);
+}
+
 /* Todo components */
 .todo-form {
     display: grid;
