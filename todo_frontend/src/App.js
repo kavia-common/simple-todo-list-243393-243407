@@ -4,6 +4,7 @@ import Card from './components/ui/Card';
 import TodoForm from './components/TodoForm';
 import TodoHeader from './components/TodoHeader';
 import TodoItem from './components/TodoItem';
+import TodoSearch from './components/TodoSearch';
 
 /**
  * @typedef {{
@@ -34,6 +35,7 @@ function App() {
         { id: createId(), title: 'Add your first task', completed: false },
         { id: createId(), title: 'Mark it done', completed: true },
     ]));
+    const [query, setQuery] = useState('');
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
@@ -42,6 +44,12 @@ function App() {
     const remainingCount = useMemo(() => {
         return todos.filter((t) => !t.completed).length;
     }, [todos]);
+
+    const filteredTodos = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return todos;
+        return todos.filter((t) => t.title.toLowerCase().includes(q));
+    }, [todos, query]);
 
     /**
      * Toggle between light/dark theme.
@@ -83,17 +91,22 @@ function App() {
                 <Card className="panel">
                     <TodoHeader theme={theme} onToggleTheme={toggleTheme} />
                     <TodoForm onAddTodo={addTodo} />
+                    <TodoSearch value={query} onChange={setQuery} />
 
                     <div className="todo-meta" aria-live="polite">
                         <span>{remainingCount} remaining</span>
-                        <span>{todos.length} total</span>
+                        <span>
+                            {filteredTodos.length} shown / {todos.length} total
+                        </span>
                     </div>
 
                     {todos.length === 0 ? (
                         <p className="empty">No todos yet. Add one above.</p>
+                    ) : filteredTodos.length === 0 ? (
+                        <p className="empty">No matches. Try a different search.</p>
                     ) : (
                         <ul className="todo-list" aria-label="Todo list">
-                            {todos.map((todo) => (
+                            {filteredTodos.map((todo) => (
                                 <TodoItem
                                     key={todo.id}
                                     todo={todo}
